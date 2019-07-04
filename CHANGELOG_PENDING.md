@@ -1,6 +1,11 @@
-## v0.31.6
+## v0.32.1
 
 **
+
+Special thanks to external contributors on this release:
+
+Friendly reminder, we have a [bug bounty
+program](https://hackerone.com/tendermint).
 
 ### BREAKING CHANGES:
 
@@ -9,22 +14,28 @@
 * Apps
 
 * Go API
-- [libs/common] Removed `PanicSanity`, `PanicCrisis`, `PanicConsensus` and `PanicQ`
-- [node] Moved `GenesisDocProvider` and `DefaultGenesisDocProviderFunc` to state package
+  - [abci] \#2127 ABCI / mempool: Add a "Recheck Tx" indicator. Breaks the ABCI
+    client interface (`abcicli.Client`) to allow for supplying the ABCI
+    `types.RequestCheckTx` and `types.RequestDeliverTx` structs, and lets the
+    mempool indicate to the ABCI app whether a CheckTx request is a recheck or
+    not.
+  - [libs] Remove unused `db/debugDB` and `common/colors.go` & `errors/errors.go` files (@marbar3778)
 
 * Blockchain Protocol
 
 * P2P Protocol
 
 ### FEATURES:
+- [node] Refactor `NewNode` to use functional options to make it more flexible
+  and extensible in the future.
+- [node] [\#3730](https://github.com/tendermint/tendermint/pull/3730) Add `CustomReactors` option to `NewNode` allowing caller to pass
+  custom reactors to run inside Tendermint node (@ParthDesai)
 
 ### IMPROVEMENTS:
-- [rpc] [\#3534](https://github.com/tendermint/tendermint/pull/3534) Add support for batched requests/responses in JSON RPC
-- [cli] [\#3160](https://github.com/tendermint/tendermint/issues/3160) Add `-config=<path-to-config>` option to `testnet` cmd (@gregdhill)
-- [cs/replay] \#3460 check appHash for each block
+  - [rpc] \#3700 Make possible to set absolute paths for TLS cert and key (@climber73)
 
 ### BUG FIXES:
-- [p2p] \#3532 limit the number of attempts to connect to a peer in seed mode
-  to 16 (as a result, the node will stop retrying after a 35 hours time window)
-- [consensus] \#2723, \#3451 and \#3317 Fix non-deterministic tests
-- [pex] \#3603 Dial seeds when addrbook needs more addresses (@defunctzombie)
+- [p2p] \#3338 Prevent "sent next PEX request too soon" errors by not calling
+  ensurePeers outside of ensurePeersRoutine
+- [behaviour] Return correct reason in MessageOutOfOrder (@jim380)
+  
